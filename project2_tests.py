@@ -75,6 +75,21 @@ def prelim_zip():
 		print(f'get_depth(1): {tree.get_depth(1)}, Expected: 2\n')
 
 
+def delete_zip():
+	data = [InsertType(4, 'a', requirements.Rank(0, 9)), InsertType(5, 'b', requirements.Rank(0, 9)), InsertType(2, 'c', requirements.Rank(1, 12)), InsertType(1, 'd', requirements.Rank(1, 5))]
+	tree = create_tree_with_data(data)
+
+	print('testing delete')
+	tree.remove(4)
+	print(f'get_size(): {tree.get_size()}, Expected: 3')
+	tree.remove(5)
+	print(f'get_size(): {tree.get_size()}, Expected: 2')
+	tree.remove(2)
+	print(f'get_size(): {tree.get_size()}, Expected: 1')
+	tree.remove(1)
+	print(f'get_size(): {tree.get_size()}, Expected: 0')
+
+
 
 def zip_tree_tests():
 	print('testing ZipTree')
@@ -228,7 +243,8 @@ def bin_packing_tests():
 	# add new tests...
 
 if __name__ == '__main__':
-	zip_tree_tests()
+	#zip_tree_tests()
 	#bin_packing_tests()
-	sanity_zip()
-	prelim_zip()
+	#sanity_zip()
+	#prelim_zip()
+	delete_zip()

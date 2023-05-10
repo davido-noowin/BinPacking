@@ -124,7 +124,7 @@ class ZipZipTree:
 
 
 	def remove(self, key: KeyType):
-		to_delete = self.find(key)
+		to_delete = self.search(self.root, key)
 
 		current = self.root
 		while (key != current.key):
@@ -165,6 +165,8 @@ class ZipZipTree:
 					prev = right
 					right = right.left
 					prev.left = left
+
+		self.size -= 1
 
 
 	def search(self, root: Node, key: KeyType) -> Node:
@@ -212,7 +214,3 @@ class ZipZipTree:
 
 	def get_depth(self, key: KeyType):
 		return self.depth_helper(self.root, key)
-
-	# feel free to define new methods in addition to the above
-	# fill in the definitions of each required member function (above),
-	# and for any additional member functions you define
