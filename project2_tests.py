@@ -46,6 +46,36 @@ def test_algorithm(test: ProblemInstance, expected_result: ProblemInstance, algo
 	else:
 		print(f'Test case failed: {name}')
 
+def sanity_zip():
+	#data = [InsertType(4, 'a',requirements.Rank(0, 9))]
+	data = [InsertType(4, 'a', requirements.Rank(0, 9)), InsertType(5, 'b', requirements.Rank(0, 9)), InsertType(2, 'c', requirements.Rank(1, 12)), InsertType(1, 'd', requirements.Rank(1, 5))]
+
+	print('insert multiple elements in tree')
+	tree = create_tree_with_data(data)
+	print(tree.get_height())
+	print(tree.get_size())
+	print(tree.find(1))
+	print(tree.get_depth(2))
+	print()
+
+
+def prelim_zip():
+		data = [InsertType(4, 'a', requirements.Rank(0, 9)), InsertType(5, 'b', requirements.Rank(0, 9)), InsertType(2, 'c', requirements.Rank(1, 12)), InsertType(1, 'd', requirements.Rank(1, 5))]
+		tree = create_tree_with_data(data)
+
+		print(f'find(4): {tree.find(4)}, Expected: a')
+		print(f'get_size(): {tree.get_size()}, Expected: 4')
+		print(f'get_height(): {tree.get_height()}, Expected: 2')
+		print(f'get_depth(2): {tree.get_depth(2)}, Expected: 0')
+		print(f'get_depth(1): {tree.get_depth(1)}, Expected: 1')
+		tree.insert(0, 'e', requirements.Rank(1, 5))
+		print(f'get_size(): {tree.get_size()}, Expected: 5')
+		print(f'get_height(): {tree.get_height()}, Expected: 2')
+		print(f'get_depth(2): {tree.get_depth(2)}, Expected: 0')
+		print(f'get_depth(1): {tree.get_depth(1)}, Expected: 2\n')
+
+
+
 def zip_tree_tests():
 	print('testing ZipTree')
 
@@ -199,4 +229,6 @@ def bin_packing_tests():
 
 if __name__ == '__main__':
 	zip_tree_tests()
-	bin_packing_tests()
+	#bin_packing_tests()
+	sanity_zip()
+	prelim_zip()

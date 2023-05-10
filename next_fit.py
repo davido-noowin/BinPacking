@@ -29,7 +29,7 @@ def next_fit(items: list[float], assignment: list[int], free_space: list[float])
 		modded = remain.quantize(decimal.Decimal('.000000000000001'), context=precision)
 		free_space[i] = float(modded.normalize())
 
-
+'''
 bin = [0.1, 0.8, 0.3, 0.5, 0.7, 0.2, 0.6, 0.4]
 assign = [0, 0, 0, 0, 0, 0, 0, 0]
 free = []
@@ -38,3 +38,4 @@ next_fit(bin, assign, free)
 
 print(assign)
 print(free)
+'''

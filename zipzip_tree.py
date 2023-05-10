@@ -6,6 +6,7 @@ from __future__ import annotations
 from typing import TypeVar
 from dataclasses import dataclass
 import random
+import math
 
 KeyType = TypeVar('KeyType')
 ValType = TypeVar('ValType')
@@ -14,6 +15,29 @@ ValType = TypeVar('ValType')
 class Rank:
 	geometric_rank: int
 	uniform_rank: int
+
+	def __lt__(self, other: Rank):
+		if (self.geometric_rank == other.geometric_rank):
+			return self.uniform_rank < other.uniform_rank
+		
+		return self.geometric_rank < other.geometric_rank
+	
+	def __gt__(self, other: Rank):
+		if (self.geometric_rank == other.geometric_rank):
+			return self.uniform_rank > other.uniform_rank
+		
+		return self.geometric_rank > other.geometric_rank
+	
+
+	def __eq__(self, other: Rank):
+		if type(other) == Rank:
+			return ((self.geometric_rank == other.geometric_rank) and (self.uniform_rank == other.uniform_rank))
+	
+
+	def __le__(self, other: Rank):
+		return self < other or self == other
+	
+
 
 
 @dataclass
@@ -29,35 +53,165 @@ class ZipZipTree:
 	def __init__(self, capacity: int):
 		self.capacity = capacity
 		self.size = 0
-		self.height = 0
 		self.root = None
 
+
 	def get_random_rank(self) -> Rank:
-		count = 0
-		while (count <= self.height // 2):
-			pass
+		uniform = random.choice([i for i in range(0, int(math.log2(self.capacity)**4) + 1)])
+		geo = 0
+		
+		while (random.choice([0, 1]) == 1):
+			geo += 1
+
+		print(f'Geometric: {geo}, Uniform {uniform}')
+		return Rank(geo, uniform)		
+			
 
 	def insert(self, key: KeyType, val: ValType, rank: Rank = None):
-		if (self.root == None):
+		new_node = None
+
+		if (rank == None):
 			new_node = Node(key, val, self.get_random_rank(), None, None)
+		else:
+			new_node = Node(key, val, rank, None, None)
+			
+		self.size += 1
+		
+		current = self.root
+
+		while ((current != None) and (rank < current.rank or (rank == current.rank and key > current.key))):
+			prev = current
+			current = current.left if key < current.key else current.right
+		
+		if (current == self.root):
+			self.root = new_node
+		elif (key < prev.key):
+			prev.left = new_node
+		else:
+			prev.right = new_node
+
+		if (current == None):
+			new_node.left = None
+			new_node.right = None
 			return
-		if (key < self.root.key):
-			pass
+		
+		if (key < current.key):
+			new_node.right = current
+		else:
+			new_node.left = current
+
+		prev = new_node
+
+		while (current != None):
+			fix = prev
+			if (current.key < key):
+				while (True):
+					if (current == None or current.key > key):
+						break
+					prev = current
+					current = current.right
+			else:
+				while (True):
+					if (current == None or current.key < key):
+						break
+					prev = current
+					current = current.left
+
+			if (fix.key > key) or (fix == new_node and prev.key > key):
+				fix.left = current
+			else:
+				fix.right = current
+
 
 	def remove(self, key: KeyType):
-		pass
+		to_delete = self.find(key)
+
+		current = self.root
+		while (key != current.key):
+			prev = current
+			current = current.left if key < current.key else current.right
+
+		left = current.left
+		right = current.right
+
+		if (left == None):
+			current = right
+		elif (right == None):
+			current = left
+		elif (left.rank >= right.rank):
+			current = left
+		else:
+			current = right
+
+		if (self.root == to_delete):
+			self.root = current
+		elif (key < prev.key):
+			prev.left = current
+		else:
+			prev.right = current
+
+		while (left != None and right != None):
+			if (left.rank >= right.rank):
+				while (True):
+					if (left == None or left.rank < right.rank):
+						break
+					prev = left
+					left = left.right
+					prev.right = right
+			else:
+				while (True):
+					if (right == None or left.rank >= right.rank):
+						break
+					prev = right
+					right = right.left
+					prev.left = left
+
+
+	def search(self, root: Node, key: KeyType) -> Node:
+		if (root == None):
+			return None
+		else:
+			if (key == root.key):
+				return root
+			elif (key < root.key):
+				return self.search(root.left, key)
+			else:
+				return self.search(root.right, key)
+
 
 	def find(self, key: KeyType) -> ValType:
-		pass
+		return self.search(self.root, key).val
+
 
 	def get_size(self) -> int:
 		return self.size
+	
+
+	def dive(self, node: Node):
+		if (node == None):
+			return -1
+		else:
+			return 1 + max(self.dive(node.left), self.dive(node.right))
+
 
 	def get_height(self) -> int:
-		pass
+		return self.dive(self.root)
+	
+
+	def depth_helper(self, root: Node, key: KeyType) -> int:
+		if (root == None):
+			return None
+		else:
+			if (key == root.key):
+				return 0
+			elif (key < root.key):
+				return 1 + self.depth_helper(root.left, key)
+			else:
+				return 1 + self.depth_helper(root.right, key)
+
 
 	def get_depth(self, key: KeyType):
-		pass
+		return self.depth_helper(self.root, key)
 
 	# feel free to define new methods in addition to the above
 	# fill in the definitions of each required member function (above),
