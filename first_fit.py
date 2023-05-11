@@ -39,16 +39,20 @@ class FirstFitZipZip(ZipZipTree):
         print(to_update.val)
 
     
-    def in_order_update(self, root: Node, val_to_be_inserted: ValType):
+    def in_order_update(self, root: Node, val_to_be_inserted: ValType, current_best_val: ValType):
         if (root == None):
             return None
         else:
-            self.in_order_update(root.left, val_to_be_inserted)
-
-            if (root.val.best_val - val_to_be_inserted >= -sys.float_info.epsilon):
+            self.in_order_update(root.left, val_to_be_inserted, current_best_val)
+            
+            remain = root.val.best_val - val_to_be_inserted
+            if (remain >= -sys.float_info.epsilon):
+                if (current_best_val < remain):
+                    current_best_val = remain
+                    root.val.best_val = remain
                 return root.key
 
-            self.in_order_update(root.right, val_to_be_inserted)
+            self.in_order_update(root.right, val_to_be_inserted, current_best_val)
 
 
 def first_fit(items: list[float], assignment: list[int], free_space: list[float]):
@@ -67,14 +71,14 @@ def first_fit(items: list[float], assignment: list[int], free_space: list[float]
 
         remains = current_best - items[i]
         if (remains >= -sys.float_info.epsilon):
-            first_key = tree.in_order_update(tree.root, items[i])
+            first_key = tree.in_order_update(tree.root, items[i], tree.root.val.best_val)
             assignment[i] = first_key
             tree.update(first_key, (items[i], remains))
             free_space[first_key] = tree.find(first_key).current_val
         else:
             free_space.append(1)
             tree.insert(tree.get_size(), ValPair(1, 1))
-            first_key = tree.in_order_update(tree.root, items[i])
+            first_key = tree.in_order_update(tree.root, items[i], tree.root.val.best_val)
             assignment[i] = first_key
             tree.update(first_key, (items[i], 1 - items[i]))
             free_space[first_key] = tree.find(first_key).current_val
