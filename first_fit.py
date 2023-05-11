@@ -13,21 +13,42 @@ class FirstFitZipZip(ZipZipTree):
        ZipZipTree.__init__(self, capacity)
 
     
-    def update(self, key: KeyType, val: ValType):
-        self.in_order_update(self.root, key, val)
+    def ffsearch(self, root: Node, key: KeyType, pair: ValPair) -> Node:
+            if (root == None):
+                return None
+            else:
+                if (root.key == key):
+                    if (root.val.best_val - pair[0] <= pair[1]):
+                        root.val.best_val = pair[1]
+                    return root
+                elif (root.key < key):
+                    if (root.val.best_val - pair[0]  <= pair[1]):
+                        root.val.best_val = pair[1]
+                    self.ffsearch(root.left, key, pair)
+                else:
+                    if (root.val.best_val - pair[0]  <= pair[1]):
+                        root.val.best_val = pair[1]
+                    self.ffsearch(root.right, key, pair)
+        
+
+    def update(self, key: KeyType, pair: ValPair):
+        print(pair)
+        to_update = self.ffsearch(self.root, key, pair)
+        to_update.val.current_val -= pair[0]
+        to_update.val.best_val = to_update.val.current_val
+        print(to_update.val)
 
     
-    def in_order_update(self, root: Node, key: KeyType, val_to_be_inserted: ValType):
+    def in_order_update(self, root: Node, val_to_be_inserted: ValType):
         if (root == None):
             return None
         else:
-            self.in_order_update(root.left, key, val_to_be_inserted)
+            self.in_order_update(root.left, val_to_be_inserted)
 
-            if (root.key == key):
-                root.val.current_val -= val_to_be_inserted
-                root.val.best_val = root.val.current_val 
+            if (root.val.best_val - val_to_be_inserted >= -sys.float_info.epsilon):
+                return root.key
 
-            self.in_order_update(root.right, key, val_to_be_inserted)
+            self.in_order_update(root.right, val_to_be_inserted)
 
 
 def first_fit(items: list[float], assignment: list[int], free_space: list[float]):
@@ -42,15 +63,21 @@ def first_fit(items: list[float], assignment: list[int], free_space: list[float]
 
     free_space.append(1)
     for i in range(len(items)):
-        current = tree.find(count).best_val
+        current_best = tree.find(tree.root.key).best_val
 
-        if (current - items[i] >= -sys.float_info.epsilon):
-            assignment[i] = count # assigns this value to a bin
-            tree.update(assignment[i], items[i]) # if it can go inside, update the value
-            free_space[count] = tree.find(count).current_val # update free space to reflect the remaining space
+        remains = current_best - items[i]
+        if (remains >= -sys.float_info.epsilon):
+            first_key = tree.in_order_update(tree.root, items[i])
+            assignment[i] = first_key
+            tree.update(first_key, (items[i], remains))
+            free_space[first_key] = tree.find(first_key).current_val
         else:
             free_space.append(1)
-            tree.insert(tree.get_size(), ValPair(1 - items[i], 1 - items[i]))
+            tree.insert(tree.get_size(), ValPair(1, 1))
+            first_key = tree.in_order_update(tree.root, items[i])
+            assignment[i] = first_key
+            tree.update(first_key, (items[i], 1 - items[i]))
+            free_space[first_key] = tree.find(first_key).current_val
 
 
     for i in range(len(free_space)):

@@ -79,9 +79,9 @@ class ZipZipTree:
 		# print(f'{self.capacity}')
 
 		if (rank == None):
-			new_node = Node(key, val, self.get_random_rank(), None, None)
-		else:
-			new_node = Node(key, val, rank, None, None)
+			rank = self.get_random_rank()
+
+		new_node = Node(key, val, rank, None, None)
 
 		# print(f'insert: {new_node}')
 			
