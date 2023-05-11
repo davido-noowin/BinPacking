@@ -47,15 +47,15 @@ def test_algorithm(test: ProblemInstance, expected_result: ProblemInstance, algo
 		print(f'Test case failed: {name}')
 
 def sanity_zip():
-	#data = [InsertType(4, 'a',requirements.Rank(0, 9))]
-	data = [InsertType(4, 'a', requirements.Rank(0, 9)), InsertType(5, 'b', requirements.Rank(0, 9)), InsertType(2, 'c', requirements.Rank(1, 12)), InsertType(1, 'd', requirements.Rank(1, 5))]
+	data = [InsertType(4, 'a',requirements.Rank(0, 9))]
+	#data = [InsertType(4, 'a', requirements.Rank(0, 9)), InsertType(5, 'b', requirements.Rank(0, 9)), InsertType(2, 'c', requirements.Rank(1, 12)), InsertType(1, 'd', requirements.Rank(1, 5))]
 
 	print('insert multiple elements in tree')
 	tree = create_tree_with_data(data)
 	print(tree.get_height())
 	print(tree.get_size())
-	print(tree.find(1))
-	print(tree.get_depth(2))
+	#print(tree.find(1))
+	#print(tree.get_depth(2))
 	print()
 
 
@@ -246,5 +246,5 @@ if __name__ == '__main__':
 	#zip_tree_tests()
 	#bin_packing_tests()
 	#sanity_zip()
-	#prelim_zip()
+	prelim_zip()
 	delete_zip()

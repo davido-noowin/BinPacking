@@ -16,28 +16,32 @@ class Rank:
 	geometric_rank: int
 	uniform_rank: int
 
-	def __lt__(self, other: Rank):
+	def __lt__(self, other: Rank) -> bool:
+		if (type(other) != Rank):
+			return
 		if (self.geometric_rank == other.geometric_rank):
 			return self.uniform_rank < other.uniform_rank
 		
 		return self.geometric_rank < other.geometric_rank
 	
-	def __gt__(self, other: Rank):
+	def __gt__(self, other: Rank) -> bool:
+		if (type(other) != Rank):
+			return
 		if (self.geometric_rank == other.geometric_rank):
 			return self.uniform_rank > other.uniform_rank
 		
 		return self.geometric_rank > other.geometric_rank
 	
 
-	def __eq__(self, other: Rank):
+	def __eq__(self, other: Rank) -> bool:
 		if type(other) == Rank:
 			return ((self.geometric_rank == other.geometric_rank) and (self.uniform_rank == other.uniform_rank))
 	
 
-	def __le__(self, other: Rank):
+	def __le__(self, other: Rank) -> bool:
+		if (type(other) != Rank):
+			return
 		return self < other or self == other
-	
-
 
 
 @dataclass
@@ -48,6 +52,9 @@ class Node:
 	left: Node
 	right: Node
 
+	def __str__(self):
+		return f'Key: {self.key} val: {self.val} rank: {self.rank.geometric_rank}, {self.rank.uniform_rank}'
+
 
 class ZipZipTree:
 	def __init__(self, capacity: int):
@@ -57,23 +64,26 @@ class ZipZipTree:
 
 
 	def get_random_rank(self) -> Rank:
-		uniform = random.choice([i for i in range(0, int(math.log2(self.capacity)**4) + 1)])
+		uniform = random.choice([i for i in range(0, int(math.log2(self.capacity)**3) - 1)])
 		geo = 0
 		
 		while (random.choice([0, 1]) == 1):
 			geo += 1
 
-		print(f'Geometric: {geo}, Uniform {uniform}')
-		return Rank(geo, uniform)		
+		# print(f'Geometric: {geo}, Uniform {uniform}')
+		return Rank(geo, uniform)
 			
 
 	def insert(self, key: KeyType, val: ValType, rank: Rank = None):
 		new_node = None
+		# print(f'{self.capacity}')
 
 		if (rank == None):
 			new_node = Node(key, val, self.get_random_rank(), None, None)
 		else:
 			new_node = Node(key, val, rank, None, None)
+
+		# print(f'insert: {new_node}')
 			
 		self.size += 1
 		
@@ -157,14 +167,16 @@ class ZipZipTree:
 						break
 					prev = left
 					left = left.right
-					prev.right = right
+
+				prev.right = right
 			else:
 				while (True):
 					if (right == None or left.rank >= right.rank):
 						break
 					prev = right
 					right = right.left
-					prev.left = left
+
+				prev.left = left
 
 		self.size -= 1
 
@@ -189,7 +201,7 @@ class ZipZipTree:
 		return self.size
 	
 
-	def dive(self, node: Node):
+	def dive(self, node: Node) -> int:
 		if (node == None):
 			return -1
 		else:
@@ -212,5 +224,5 @@ class ZipZipTree:
 				return 1 + self.depth_helper(root.right, key)
 
 
-	def get_depth(self, key: KeyType):
+	def get_depth(self, key: KeyType) -> int:
 		return self.depth_helper(self.root, key)
