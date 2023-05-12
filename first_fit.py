@@ -75,11 +75,11 @@ def first_fit(items: list[float], assignment: list[int], free_space: list[float]
             free_space[first_key.key] = float(abs(modded.normalize()))
 
 
-#bin = [0.1, 0.8, 0.3, 0.5, 0.7, 0.2, 0.6, 0.4]
-#assign = [0, 0, 0, 0, 0, 0, 0, 0]
+bin = [0.1, 0.8, 0.3, 0.5, 0.7, 0.2, 0.6, 0.4]
+assign = [0, 0, 0, 0, 0, 0, 0, 0]
 
-bin = [random.uniform(0.0, 0.7) for _ in range(150000)]
-assign = [0] * len(bin)
+#bin = [random.uniform(0.0, 0.7) for _ in range(150000)]
+#assign = [0] * len(bin)
 free = []
 
 first_fit(bin, assign, free)
