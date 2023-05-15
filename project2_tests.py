@@ -244,7 +244,7 @@ def bin_packing_tests():
 
 if __name__ == '__main__':
 	#zip_tree_tests()
-	#bin_packing_tests()
+	bin_packing_tests()
 	#sanity_zip()
-	prelim_zip()
-	delete_zip()
+	#prelim_zip()
+	#delete_zip()

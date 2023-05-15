@@ -72,6 +72,10 @@ class ZipZipTree:
 
 		# print(f'Geometric: {geo}, Uniform {uniform}')
 		return Rank(geo, uniform)
+	
+
+	def update_node(self, node: Node):
+		pass
 			
 
 	def insert(self, key: KeyType, val: ValType, rank: Rank = None):
@@ -86,7 +90,8 @@ class ZipZipTree:
 		# print(f'insert: {new_node}')
 			
 		self.size += 1
-		
+
+
 		current = self.root
 
 		while ((current != None) and (rank < current.rank or (rank == current.rank and key > current.key))):
@@ -97,8 +102,10 @@ class ZipZipTree:
 			self.root = new_node
 		elif (key < prev.key):
 			prev.left = new_node
+			self.update_node(prev)
 		else:
 			prev.right = new_node
+			self.update_node(prev)
 
 		if (current == None):
 			new_node.left = None
@@ -107,8 +114,10 @@ class ZipZipTree:
 		
 		if (key < current.key):
 			new_node.right = current
+			self.update_node(new_node)
 		else:
 			new_node.left = current
+			self.update_node(new_node)
 
 		prev = new_node
 
@@ -119,18 +128,25 @@ class ZipZipTree:
 					if (current == None or current.key > key):
 						break
 					prev = current
+					self.update_node(prev)
 					current = current.right
+					self.update_node(current)
 			else:
 				while (True):
 					if (current == None or current.key < key):
 						break
 					prev = current
+					self.update_node(prev)
 					current = current.left
+					self.update_node(current)
 
 			if (fix.key > key) or (fix == new_node and prev.key > key):
 				fix.left = current
+				self.update_node(fix)
 			else:
 				fix.right = current
+				self.update_node(fix)
+				
 
 
 	def remove(self, key: KeyType):
