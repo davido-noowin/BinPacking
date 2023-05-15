@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from merge_sort import merge_sort
 import sys
 import random
-
+'''
 @dataclass
 class ValPair:
     current_val: ValType
@@ -146,7 +146,6 @@ class FirstFitZipZip(ZipZipTree):
     def update_parent(self, stack: list[Node]):
         while stack:
             parent = stack.pop()
-            parent.val.best_val = -1
             self.update_node(parent)
 
 
@@ -182,6 +181,7 @@ class FirstFitZipZip(ZipZipTree):
     def update(self, node: Node, val: ValType):
         #to_update = self.search(self.root, key)
         node.val.current_val -= val
+        self.update_node(node)
 
 
     def update_parents(self, node: Node, is_new_node: bool = False):
@@ -272,21 +272,21 @@ def first_fit_decreasing(items: list[float], assignment: list[int], free_space: 
     items.reverse()
 
     first_fit(items, assignment, free_space)
-'''
+# '''
 
-bin = [0.54, 0.67, 0.46, 0.57, 0.06, 0.23, 0.83, 0.64, 0.47, 0.03, 0.53, 0.74, 0.36, 0.24, 0.07, 0.25, 0.05, 0.63, 0.43, 0.04]
+#bin = [0.54, 0.67, 0.46, 0.57, 0.06, 0.23, 0.83, 0.64, 0.47, 0.03, 0.53, 0.74, 0.36, 0.24, 0.07, 0.25, 0.05, 0.63, 0.43, 0.04]
 #bin = [0.1, 0.8, 0.3, 0.5, 0.7, 0.2, 0.6, 0.4]
 #bin = [0.7, 0.7, 0.7, 0.7, 0.3, 0.3, 0.5, 0.4]
 
-assign = [0] *len(bin)
+#assign = [0] *len(bin)
 
 #bin = [random.uniform(0.0, 0.7) for _ in range(150000)]
 #assign = [0] * len(bin)
-free = []
+#free = []
 
-first_fit_decreasing(bin, assign, free)
+#first_fit_decreasing(bin, assign, free)
 
-print(assign)
-print(free)
+#print(assign)
+#print(free)
 
 
