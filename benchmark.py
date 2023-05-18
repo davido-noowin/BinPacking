@@ -16,6 +16,7 @@ BIN_PACKING_ALGORITHMS = {
     'best_fit_decreasing' : requirements.best_fit_decreasing
 }
 
+# 'data'
 DATA_DIRECTORY = Path('data')
 
 parser = argparse.ArgumentParser(description= 'Benchmark Several Bin Packing Algorithms', 
@@ -57,7 +58,8 @@ def benchmark(algorithm:Callable[[list[int]], None], size:int) -> None:
 
     algorithm(nums, num_of_bins, free_space)
 
-    waste = len(num_of_bins) - weight_of_list
+    bins_used = max(num_of_bins) + 1
+    waste = bins_used - weight_of_list
 
     saveData(args.algorithm_name, size, waste)
 
@@ -66,5 +68,10 @@ if __name__ == '__main__':
     args = parser.parse_args()
     args.algorithm = BIN_PACKING_ALGORITHMS[args.algorithm_name]
 
-    #for i in range(100):
-    benchmark(args.algorithm, args.size)
+    for i in range(200):
+        size = 4
+        while size <= args.size:
+             benchmark(args.algorithm, size)
+
+             size *= 2
+        print(f'Iteration: {i} done')
