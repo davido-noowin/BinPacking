@@ -43,7 +43,7 @@ def loadAverageData(algorithm_name:str) -> tuple[list[int], list[int]]:
 def addToPlot(algorithm_name:str, color:str):
     sizes, average_times = loadAverageData(algorithm_name)
 
-    x,y = sizes[5:], average_times[5:] # might have to change
+    x,y = sizes[7:], average_times[7:] # might have to change
     logx, logy = numpy.log(x), numpy.log(y)
 
     # making a best fit line
@@ -68,6 +68,9 @@ def addToPlot(algorithm_name:str, color:str):
 
 
 if __name__ == '__main__':
-    e0 = addToPlot('first_fit', 'green')
+    #e0 = addToPlot('first_fit', 'green')
+    e0 = addToPlot('best_fit', 'blue')
+
+    plt.legend(loc = 'upper left')
 
     plt.show()
