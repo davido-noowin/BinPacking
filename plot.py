@@ -4,7 +4,8 @@ import csv
 from collections import defaultdict
 from pathlib import Path
 
-DATA_DIRECTORY = Path('CS161\\BinPacking\\data')
+# 'CS161\\BinPacking\\data'
+DATA_DIRECTORY = Path('BinPacking\\data')
 
 
 def getDataPath( algorithm_name:str) -> Path:
@@ -43,7 +44,7 @@ def loadAverageData(algorithm_name:str) -> tuple[list[int], list[int]]:
 def addToPlot(algorithm_name:str, color:str):
     sizes, average_times = loadAverageData(algorithm_name)
 
-    x,y = sizes[7:], average_times[7:] # might have to change
+    x,y = sizes[8:], average_times[8:] # might have to change
     logx, logy = numpy.log(x), numpy.log(y)
 
     # making a best fit line
@@ -62,14 +63,15 @@ def addToPlot(algorithm_name:str, color:str):
     #plt.text(2**9, y[-1], equation).set_color(color)
     plt.xlabel('Input Size (n, # of elements)')
     plt.ylabel('Waste (# bins used - sum of items)')
-    plt.title(f'{algorithm_name.capitalize()}')
+    # {algorithm_name.capitalize()}
+    plt.title(f'First Fit Decreasing and Best Fit Decreasing')
     
     return equation
 
 
 if __name__ == '__main__':
-    #e0 = addToPlot('first_fit', 'green')
-    e0 = addToPlot('best_fit', 'blue')
+    e0 = addToPlot('best_fit_decreasing', 'red')
+    e1 = addToPlot('first_fit_decreasing', 'pink')
 
     plt.legend(loc = 'upper left')
 
